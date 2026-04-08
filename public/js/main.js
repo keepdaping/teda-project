@@ -149,3 +149,41 @@ var revealObs = new IntersectionObserver(function (entries, obs) {
 }, { threshold: 0.10 });
 
 document.querySelectorAll(".reveal").forEach(function (el) { revealObs.observe(el); });
+
+
+/* ============================================================
+   HERO SONIC SCROLL EFFECT (ZOOM OUT + DEPTH)
+   ============================================================ */
+
+(function () {
+    var heroBg = document.querySelector(".hero-bg");
+    if (!heroBg) return;
+
+    var ticking = false;
+
+    window.addEventListener("scroll", function () {
+        if (!ticking) {
+            window.requestAnimationFrame(function () {
+
+                var scrollY = window.scrollY;
+
+                /* SPEED CONTROL */
+                var scale = 1.25 - (scrollY * 0.0006);
+
+                /* LIMIT SCALE */
+                var finalScale = Math.max(scale, 1);
+
+                /* DEPTH MOVEMENT */
+                var translateY = scrollY * 0.08;
+
+                heroBg.style.transform =
+                    "scale(" + finalScale + ") translateY(" + translateY + "px)";
+
+                ticking = false;
+            });
+
+            ticking = true;
+        }
+    }, { passive: true });
+
+})();

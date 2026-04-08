@@ -186,6 +186,7 @@ nav a.active            { color: #fff; }
    HERO
    ============================================================ */
 .hero {
+    position: relative;          /* needed for .hero-bg absolute positioning */
     min-height: 86vh;
     background:
         linear-gradient(rgba(0,0,0,0.50), rgba(0,0,0,0.50)),
@@ -196,9 +197,29 @@ nav a.active            { color: #fff; }
     justify-content: center;
     text-align: center;
     padding: var(--s5) var(--s3);
+    overflow: hidden;
+}
+
+/* Particle canvas layer — sits behind all hero content */
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.hero-bg canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.45;
 }
 
 .hero-content {
+    position: relative;          /* above .hero-bg canvas */
+    z-index: 1;
     max-width: 640px;
     color: #fff;
     animation: a-up 0.85s var(--ease) both;
@@ -243,6 +264,43 @@ nav a.active            { color: #fff; }
    ============================================================ */
 .section         { padding: var(--s5) 0; }
 .section--tinted { background: var(--tinted); }
+
+/* ── Parallax sections ──────────────────────────────────── */
+.section--parallax {
+    position: relative;
+    overflow: hidden;
+    /* background from token is overridden visually by the overlay */
+}
+
+/* The moving background image layer */
+.section-bg {
+    position: absolute;
+    inset: 0;
+    background: url('../images/hero.jpg') center / cover no-repeat;
+    transform: scale(1.15);   /* oversize — JS drives this */
+    z-index: 0;
+    will-change: transform;
+    transition: none;         /* JS-only, no CSS transition */
+}
+
+/* Semi-opaque overlay so existing light-theme text stays readable */
+.section-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(247, 246, 244, 0.91);   /* matches --bg */
+}
+
+/* Tinted variant overlay — matches --tinted */
+.section--tinted .section-bg::after {
+    background: rgba(240, 235, 229, 0.91);
+}
+
+/* Content always above the bg + overlay stack */
+.section--parallax .container {
+    position: relative;
+    z-index: 2;
+}
 
 /* ── Typography hierarchy ── */
 .label {
@@ -1209,4 +1267,264 @@ table tbody tr:hover td      { background: #faf7f4; }
         width: 240px;
         height: 190px;
     }
+}
+
+
+/* ============================================================
+   FINAL POLISH — ELITE UI REFINEMENT (NON-DESTRUCTIVE)
+   ============================================================ */
+
+/* ===== GLOBAL SMOOTHNESS ===== */
+body {
+    letter-spacing: -0.01em;
+}
+
+/* ===== NAV — PREMIUM ===== */
+nav {
+    backdrop-filter: blur(12px);
+    background: rgba(26, 26, 26, 0.78);
+}
+
+nav a {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+/* ===== HERO — DEPTH ===== */
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.06), transparent 60%);
+    pointer-events: none;
+}
+
+/* ===== SECTION FLOW ===== */
+.section + .section {
+    border-top: 1px solid rgba(0,0,0,0.035);
+}
+
+/* ===== CARDS — HIGH-END FEEL ===== */
+.card {
+    transition:
+        transform 0.3s var(--ease),
+        box-shadow 0.3s var(--ease);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+/* ===== TYPOGRAPHY — TIGHTER ===== */
+h2 {
+    letter-spacing: -0.045em;
+}
+
+.lead {
+    font-size: 18px;
+    opacity: 0.92;
+}
+
+/* ===== BUTTONS — REFINED ===== */
+.btn {
+    border-radius: 9px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--p) 0%, var(--p-light) 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--p-dark), var(--p));
+}
+
+/* ===== FORMS — FEEL BETTER ===== */
+form input,
+form textarea {
+    border-radius: 9px;
+}
+
+form input:focus,
+form textarea:focus {
+    transform: scale(1.01);
+}
+
+/* ===== GALLERY — PREMIUM ===== */
+.gallery-carousel img {
+    border-radius: 14px;
+}
+
+/* ===== FOOTER — DEPTH ===== */
+footer {
+    background: linear-gradient(180deg, #0d0d0d 0%, #050505 100%);
+}
+
+/* ============================================================
+   REAL FIX — CLEAN PROFESSIONAL UI
+   ============================================================ */
+
+/* ===== REMOVE HEAVINESS ===== */
+.card,
+.info-block,
+.resource-list,
+.donate-panel,
+.table-wrap {
+    box-shadow: none !important;
+    border: 1px solid var(--border);
+}
+
+/* ===== ADD AIR (THIS IS THE BIG ONE) ===== */
+.section {
+    padding: 120px 0 !important;
+}
+
+/* spacing inside merged sections */
+.block-sep {
+    margin-top: 100px !important;
+}
+
+/* ===== TYPOGRAPHY BREATHING ===== */
+h2 {
+    margin-bottom: 32px;
+}
+
+.lead {
+    margin-bottom: 48px;
+    max-width: 600px;
+}
+
+/* ===== MAKE CONTENT NARROWER (VERY IMPORTANT) ===== */
+.container {
+    max-width: 1000px;
+}
+
+/* ===== HERO FIX (LESS HEAVY) ===== */
+.hero {
+    min-height: 75vh;
+}
+
+/* ===== NAV CLEANER ===== */
+nav {
+    background: var(--p-dark) !important;
+    border-bottom: none;
+}
+
+/* ===== CARDS SIMPLIFIED ===== */
+.card {
+    transform: none !important;
+}
+
+.card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ===== REMOVE OVER-STYLING ===== */
+.btn-primary {
+    box-shadow: none !important;
+}
+
+/* ===== SECTION FLOW (CRITICAL) ===== */
+.section + .section {
+    border-top: none;
+}
+
+/* ===== FORM CLEAN ===== */
+form input,
+form textarea {
+    background: white;
+}
+
+/* ===== GALLERY CLEAN ===== */
+.gallery-carousel img {
+    box-shadow: none !important;
+}
+
+/* ===== FOOTER SIMPLER ===== */
+footer {
+    background: var(--p-dark) !important;
+}
+
+/* ============================================================
+   CONTROLLED DEPTH SYSTEM (REAL 3D FEEL — CLEAN)
+   ============================================================ */
+
+/* ===== BASE DEPTH ===== */
+.card,
+.info-block,
+.resource-list,
+.donate-panel,
+.stat-chip {
+    box-shadow:
+        0 1px 2px rgba(0,0,0,0.04),
+        0 6px 20px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: all 0.3s var(--ease);
+}
+
+/* ===== HOVER DEPTH ===== */
+.card:hover,
+.info-block:hover,
+.donate-panel:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.10),
+        0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* ===== HERO DEPTH ===== */
+.hero {
+    position: relative;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06), transparent 60%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.04), transparent 60%);
+    pointer-events: none;
+}
+
+/* ===== NAV DEPTH ===== */
+nav {
+    background: rgba(26, 26, 26, 0.85) !important;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+/* ===== BUTTON DEPTH ===== */
+.btn-primary {
+    box-shadow:
+        0 4px 14px rgba(68, 23, 10, 0.25);
+}
+
+.btn-primary:hover {
+    box-shadow:
+        0 6px 20px rgba(68, 23, 10, 0.35);
+}
+
+/* ===== IMAGE DEPTH ===== */
+.gallery-carousel img,
+.card img {
+    box-shadow:
+        0 6px 18px rgba(0,0,0,0.10);
+}
+
+/* ===== SECTION LAYERING ===== */
+.section--tinted {
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.04);
+}
+
+/* ===== TYPOGRAPHY DEPTH ===== */
+h2 {
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/* ===== FOOTER DEPTH ===== */
+footer {
+    background: linear-gradient(180deg, #0d0d0d, #050505);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
 }
