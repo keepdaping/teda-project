@@ -1,5 +1,9 @@
+/* ============================================================
+   TEDA — main.js
+   ============================================================ */
+
 /* ── Navbar: scroll shadow + active section highlight ── */
-var nav     = document.querySelector("nav");
+var nav      = document.querySelector("nav");
 var navLinks = document.querySelectorAll("nav a[href^='#']");
 
 window.addEventListener("scroll", function () {
@@ -15,69 +19,133 @@ window.addEventListener("scroll", function () {
     });
 }, { passive: true });
 
-/* ── Gallery Carousel: smooth horizontal scroll ── */
+/* ── Gallery Carousel ─────────────────────────────────── */
 function scrollGallery(direction) {
-    var gallery = document.getElementById("gallery-carousel");
-    if (!gallery) return;
-
-    var scrollAmount = 340; // Item width (320px) + gap (16px) + padding
-    gallery.scrollBy({
-        left: direction * scrollAmount,
-        behavior: "smooth"
-    });
+    var carousel = document.getElementById("gallery-carousel");
+    if (!carousel) return;
+    carousel.scrollBy({ left: direction * 316, behavior: "smooth" });
 }
 
-/* ── Keyboard support for gallery scrolling ── */
+/* Keyboard arrow support for carousel */
 document.addEventListener("keydown", function (e) {
-    if (e.key === "ArrowLeft") scrollGallery(-1);
+    var modal = document.getElementById("modal");
+    if (modal && modal.classList.contains("open")) return; // don't scroll carousel when modal open
+    if (e.key === "ArrowLeft")  scrollGallery(-1);
     if (e.key === "ArrowRight") scrollGallery(1);
 });
 
-/* ── Modal ── */
-var modal = document.getElementById("modal");
+/* Click on carousel image → open modal */
+(function () {
+    var carousel = document.getElementById("gallery-carousel");
+    if (!carousel) return;
+    carousel.querySelectorAll("img").forEach(function (img) {
+        img.addEventListener("click", function () { openModal(img.src); });
+    });
+})();
+
+/* ── Modal ────────────────────────────────────────────── */
+var modal    = document.getElementById("modal");
+var modalImg = document.getElementById("modal-img");
+var closeBtn = modal ? modal.querySelector(".modal-close") : null;
 
 function openModal(src) {
-    document.getElementById("modal-img").src = src;
+    if (!modal || !modalImg) return;
+    modalImg.src = src;
     modal.classList.add("open");
     document.body.style.overflow = "hidden";
 }
 
 function closeModal() {
+    if (!modal) return;
     modal.classList.remove("open");
     document.body.style.overflow = "";
 }
 
-modal.addEventListener("click", function (e) {
-    if (e.target === modal) closeModal();
-});
+if (modal) {
+    modal.addEventListener("click", function (e) {
+        if (e.target === modal) closeModal();
+    });
+}
+
+if (closeBtn) {
+    closeBtn.addEventListener("click", closeModal);
+}
 
 document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") closeModal();
 });
 
-/* ── Scroll reveal with IntersectionObserver ── */
-// Sections: alternate left / right
-var sectionIndex = 0;
+/* ── Form submission via fetch (backend returns JSON) ─── */
+document.querySelectorAll("form[action]").forEach(function (form) {
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var btn  = form.querySelector("button[type=submit]");
+        var orig = btn ? btn.textContent : "";
+        if (btn) { btn.textContent = "Sending…"; btn.disabled = true; }
+
+        fetch(form.action, {
+            method: "POST",
+            body: new FormData(form)
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data.success) {
+                showFeedback(form, data.message || "Submitted successfully!", "success");
+                form.reset();
+                if (data.whatsappLink) {
+                    setTimeout(function () { window.open(data.whatsappLink, "_blank"); }, 800);
+                }
+            } else {
+                showFeedback(form, data.message || "Something went wrong.", "error");
+            }
+        })
+        .catch(function () {
+            showFeedback(form, "Network error — please try again.", "error");
+        })
+        .finally(function () {
+            if (btn) { btn.textContent = orig; btn.disabled = false; }
+        });
+    });
+});
+
+function showFeedback(form, message, type) {
+    var existing = form.querySelector(".form-feedback");
+    if (existing) existing.remove();
+
+    var el = document.createElement("div");
+    el.className = "form-feedback form-feedback--" + type;
+    el.textContent = message;
+
+    var btn = form.querySelector("button[type=submit]");
+    form.insertBefore(el, btn || null);
+
+    /* Auto-fade after 5 s */
+    setTimeout(function () {
+        el.style.opacity = "0";
+        setTimeout(function () { el.remove(); }, 400);
+    }, 5000);
+}
+
+/* ── Scroll reveal with IntersectionObserver ──────────── */
+var sectionIdx = 0;
 document.querySelectorAll(".section:not(.hero)").forEach(function (sec) {
-    sec.classList.add("reveal", sectionIndex % 2 === 0 ? "from-left" : "from-right");
-    sectionIndex++;
+    sec.classList.add("reveal", sectionIdx % 2 === 0 ? "from-left" : "from-right");
+    sectionIdx++;
 });
 
-// Cards: slide up with a gentle stagger
-document.querySelectorAll(".card, .about-block, .donate-card").forEach(function (el, i) {
+document.querySelectorAll(".card, .info-block, .donate-panel").forEach(function (el, i) {
     el.classList.add("reveal", "from-bottom");
-    el.style.transitionDelay = (i * 0.06) + "s";
+    el.style.transitionDelay = (i * 0.05) + "s";
 });
 
-var observer = new IntersectionObserver(function (entries) {
+var revealObs = new IntersectionObserver(function (entries, obs) {
     entries.forEach(function (entry) {
         if (entry.isIntersecting) {
             entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
+            obs.unobserve(entry.target);
         }
     });
-}, { threshold: 0.1 });
+}, { threshold: 0.10 });
 
-document.querySelectorAll(".reveal").forEach(function (el) {
-    observer.observe(el);
-});
+document.querySelectorAll(".reveal").forEach(function (el) { revealObs.observe(el); });
