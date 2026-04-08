@@ -1,7 +1,7 @@
 /* ============================================================
    FONT IMPORT
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
 
 /* ============================================================
    DESIGN TOKENS
@@ -20,7 +20,7 @@
     --c-text-tertiary:  #94a3b8;
 
     /* ── Surfaces ───────────────────────────────────── */
-    --c-bg:             #fafaf9;  /* neutral white */
+    --c-bg:             #FDFCFB;  /* warm premium white */
     --c-surface:        #ffffff;
     --c-tinted:         #f5f3f1;  /* subtle tint for alternate sections */
     --c-border:         #e5e3e0;
@@ -131,6 +131,7 @@ header img {
 }
 
 header h1 {
+    font-family: 'Playfair Display', serif;
     font-size: 28px;
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -165,6 +166,7 @@ nav {
 
 nav.scrolled {
     box-shadow: 0 8px 32px rgba(0,0,0,0.20);
+    backdrop-filter: blur(10px);
 }
 
 nav a {
@@ -267,7 +269,7 @@ nav a.active {
    SECTION SHELL — open, no box
    ============================================================ */
 .section {
-    padding: var(--s6) 0;
+    padding: var(--s7) 0;
 }
 
 .section--tinted {
@@ -289,6 +291,7 @@ nav a.active {
    TYPOGRAPHY SCALE
    ============================================================ */
 h2 {
+    font-family: 'Playfair Display', serif;
     font-size: clamp(32px, 5.5vw, 48px);
     font-weight: 700;
     letter-spacing: -0.035em;
@@ -341,6 +344,7 @@ p {
     border: 1px solid var(--c-border);
     border-radius: var(--r);
     padding: var(--s4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .info-block h3 {
@@ -432,6 +436,7 @@ p {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     transition: transform var(--t) var(--ease),
                 box-shadow var(--t) var(--ease),
                 border-color var(--t) var(--ease);
@@ -476,7 +481,7 @@ p {
 
 .card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--sh-md);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
     border-color: #d9d5d0;
 }
 
@@ -537,7 +542,7 @@ p {
     border: 1px solid var(--c-border);
     border-radius: var(--r);
     padding: var(--s5);
-    box-shadow: var(--sh-xs);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .form-row {
@@ -761,6 +766,35 @@ form textarea {
 .modal-close:hover { background: rgba(255,255,255,0.22); }
 
 /* ============================================================
+   TOAST NOTIFICATIONS — professional notification system
+   ============================================================ */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--c-primary);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    animation: slideIn 0.3s var(--ease);
+    max-width: 360px;
+    word-wrap: break-word;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.toast.success { background: #10B981; }
+.toast.error { background: #EF4444; }
+.toast.info { background: var(--c-primary); }
+
+@keyframes slideIn {
+    from { transform: translateX(400px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* ============================================================
    DONATE
    ============================================================ */
 .donate-grid {
@@ -775,6 +809,7 @@ form textarea {
     border: 1px solid var(--c-border);
     border-radius: var(--r);
     padding: var(--s5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     display: flex;
     flex-direction: column;
     gap: var(--s3);
@@ -923,10 +958,11 @@ footer {
 
 .stat-chip {
     background: var(--c-surface);
-    border: 1px solid var(--c-border);
-    border-radius: var(--r);
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
     padding: var(--s3) var(--s4);
-    min-width: 180px;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .stat-chip strong {
@@ -976,26 +1012,27 @@ table {
 }
 
 table thead {
-    background: var(--c-primary);
+    background: #F8F9FA;
 }
 
 table th {
-    padding: 13px 16px;
+    padding: 16px 20px;
     text-align: left;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.90);
-    border-bottom: none;
+    color: #2D3748;
+    border-bottom: 1px solid #E2E8F0;
     white-space: nowrap;
 }
 
 table td {
-    padding: 13px 16px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--c-border);
     color: var(--c-text);
     vertical-align: top;
+    font-size: 15px;
 }
 
 table tbody tr:last-child td {
@@ -1014,6 +1051,39 @@ table tbody tr:hover td {
     background: var(--c-surface);
     border: 1px solid var(--c-border);
     border-radius: var(--r);
+}
+
+/* ============================================================
+   STATUS BADGES
+   ============================================================ */
+.badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid;
+    white-space: nowrap;
+}
+
+.badge-new {
+    background: #D1F4D1;
+    color: #22863C;
+    border-color: #22863C;
+}
+
+.badge-pending {
+    background: #FEF3C7;
+    color: #92400E;
+    border-color: #92400E;
+}
+
+.badge-completed {
+    background: #D1FAE5;
+    color: #065F46;
+    border-color: #065F46;
 }
 
 /* ============================================================

@@ -2,70 +2,167 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TEDA Admin</title>
+    <title>TEDA Admin — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="../public/css/style.css">
 </head>
 <body>
 
-<header>
-    <h1>TEDA Admin Dashboard</h1>
-</header>
-
 <?php
 include __DIR__ . '/../backend/db.php';
+
+$memberCount  = $conn->query("SELECT COUNT(*) AS c FROM membership")->fetch_assoc()['c']  ?? 0;
+$contactCount = $conn->query("SELECT COUNT(*) AS c FROM contact_messages")->fetch_assoc()['c'] ?? 0;
 ?>
 
-<section>
-    <h2>Membership Applications</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Message</th>
-        </tr>
-        <?php
-        $result = $conn->query("SELECT * FROM membership");
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>
-                <td>{$row['id']}</td>
-                <td>{$row['fullname']}</td>
-                <td>{$row['email']}</td>
-                <td>{$row['phone']}</td>
-                <td>{$row['message']}</td>
-            </tr>";
-        }
-        ?>
-    </table>
-</section>
+<header class="admin-header">
+    <h1>TEDA Admin Dashboard</h1>
+    <p>Teso Elites Development Association — internal view</p>
+</header>
 
-<section>
-    <h2>Contact Messages</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Message</th>
-        </tr>
-        <?php
-        $result = $conn->query("SELECT * FROM contact_messages");
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>
-                <td>{$row['id']}</td>
-                <td>{$row['name']}</td>
-                <td>{$row['email']}</td>
-                <td>{$row['message']}</td>
-            </tr>";
-        }
-        ?>
-    </table>
-</section>
+<nav>
+    <a href="../index.php">&#8592; Back to Site</a>
+    <a href="#membership" class="active">Membership</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<div class="section">
+    <div class="container">
+
+        <!-- Stats -->
+        <div class="stat-row">
+            <div class="stat-chip">
+                <strong><?= (int)$memberCount ?></strong>
+                <span>Membership Applications</span>
+            </div>
+            <div class="stat-chip">
+                <strong><?= (int)$contactCount ?></strong>
+                <span>Contact Messages</span>
+            </div>
+        </div>
+
+        <!-- Membership table -->
+        <div id="membership" class="admin-block">
+            <span class="label">Applications</span>
+            <h2>Membership</h2>
+
+            <?php
+            $result = $conn->query("SELECT * FROM membership ORDER BY id DESC");
+            if ($result && $result->num_rows > 0): ?>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['id']) ?></td>
+                            <td><span class="badge badge-new">New</span> <?= htmlspecialchars($row['fullname']) ?></td>
+                            <td><?= htmlspecialchars($row['email']) ?></td>
+                            <td><?= htmlspecialchars($row['phone']) ?></td>
+                            <td><?= htmlspecialchars($row['message']) ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php else: ?>
+            <p class="empty-state">No membership applications yet.</p>
+            <?php endif; ?>
+        </div>
+
+        <hr class="admin-divider">
+
+        <!-- Contact table -->
+        <div id="contact" class="admin-block">
+            <span class="label">Inbox</span>
+            <h2>Contact Messages</h2>
+
+            <?php
+            $result = $conn->query("SELECT * FROM contact_messages ORDER BY id DESC");
+            if ($result && $result->num_rows > 0): ?>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['id']) ?></td>
+                            <td><span class="badge badge-new">New</span> <?= htmlspecialchars($row['name']) ?></td>
+                            <td><?= htmlspecialchars($row['email']) ?></td>
+                            <td><?= htmlspecialchars($row['message']) ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php else: ?>
+            <p class="empty-state">No contact messages yet.</p>
+            <?php endif; ?>
+        </div>
+
+    </div>
+</div>
+
+<?php $conn->close(); ?>
 
 <footer>
-    <p>&copy; 2026 TEDA Admin</p>
+    <div class="footer-inner">
+        <div>
+            <p class="footer-brand">TEDA</p>
+            <p class="footer-tagline">Admin Dashboard — internal use only.</p>
+        </div>
+        <ul class="footer-links">
+            <li><a href="../index.php">Main Site</a></li>
+            <li><a href="#membership">Membership</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+    <p class="footer-bottom">&copy; 2026 TEDA. All rights reserved.</p>
 </footer>
+
+<!-- Toast Notification System -->
+<script>
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+// Add slideOut animation if not already present
+if (!document.querySelector('style[data-toast-animation]')) {
+    const style = document.createElement('style');
+    style.setAttribute('data-toast-animation', 'true');
+    style.textContent = `
+        @keyframes slideOut {
+            to { transform: translateX(450px); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+</script>
 
 </body>
 </html>
