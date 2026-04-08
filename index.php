@@ -5,7 +5,7 @@
     <title>TEDA - Teso Elites Development Association</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="/teda/public/css/style.css?v=99">
 </head>
 
 <body>
@@ -192,13 +192,32 @@
     <div class="container">
         <span class="label">In the field</span>
         <h2>Our Activities</h2>
-        <div class="gallery">
-            <img src="public/images/img1.jpg" alt="Activity 1">
-            <img src="public/images/img2.jpg" alt="Activity 2">
-            <img src="public/images/img3.jpg" alt="Activity 3">
-            <img src="public/images/img4.jpg" alt="Activity 4">
-            <img src="public/images/img5.jpg" alt="Activity 5">
-            <img src="public/images/img6.jpg" alt="Activity 6">
+        <p class="lead">Scroll right to see our recent activities and community engagements across Teso region.</p>
+
+        <div class="gallery" id="gallery-carousel">
+            <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                <img src="public/images/img1.jpg" alt="Activity 1">
+            </div>
+            <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                <img src="public/images/img2.jpg" alt="Activity 2">
+            </div>
+            <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                <img src="public/images/img3.jpg" alt="Activity 3">
+            </div>
+            <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                <img src="public/images/img4.jpg" alt="Activity 4">
+            </div>
+            <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                <img src="public/images/img5.jpg" alt="Activity 5">
+            </div>
+            <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                <img src="public/images/img6.jpg" alt="Activity 6">
+            </div>
+        </div>
+
+        <div class="gallery-controls">
+            <button class="gallery-scroll-btn" onclick="scrollGallery(-1)" title="Scroll left">←</button>
+            <button class="gallery-scroll-btn" onclick="scrollGallery(1)" title="Scroll right">→</button>
         </div>
     </div>
 </section>

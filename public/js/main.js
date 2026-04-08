@@ -15,13 +15,22 @@ window.addEventListener("scroll", function () {
     });
 }, { passive: true });
 
-/* ── Gallery: wrap imgs in .gallery-item for hover overlay ── */
-document.querySelectorAll(".gallery img").forEach(function (img) {
-    var wrapper = document.createElement("div");
-    wrapper.className = "gallery-item";
-    img.parentNode.insertBefore(wrapper, img);
-    wrapper.appendChild(img);
-    wrapper.addEventListener("click", function () { openModal(img.src); });
+/* ── Gallery Carousel: smooth horizontal scroll ── */
+function scrollGallery(direction) {
+    var gallery = document.getElementById("gallery-carousel");
+    if (!gallery) return;
+
+    var scrollAmount = 340; // Item width (320px) + gap (16px) + padding
+    gallery.scrollBy({
+        left: direction * scrollAmount,
+        behavior: "smooth"
+    });
+}
+
+/* ── Keyboard support for gallery scrolling ── */
+document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") scrollGallery(-1);
+    if (e.key === "ArrowRight") scrollGallery(1);
 });
 
 /* ── Modal ── */
