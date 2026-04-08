@@ -6,7 +6,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="../public/css/style.css">
-    <link rel="stylesheet" href="../public/css/admin.css">
 </head>
 <body>
 
@@ -146,23 +145,10 @@ function showToast(message, type = 'success') {
     toast.textContent = message;
     document.body.appendChild(toast);
 
-    // Auto-remove after 4 seconds
     setTimeout(() => {
-        toast.style.animation = 'slideOut 0.3s ease forwards';
+        toast.style.animation = 'toast-out 0.3s var(--ease) forwards';
         setTimeout(() => toast.remove(), 300);
     }, 4000);
-}
-
-// Add slideOut animation if not already present
-if (!document.querySelector('style[data-toast-animation]')) {
-    const style = document.createElement('style');
-    style.setAttribute('data-toast-animation', 'true');
-    style.textContent = `
-        @keyframes slideOut {
-            to { transform: translateX(450px); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
 }
 </script>
 
