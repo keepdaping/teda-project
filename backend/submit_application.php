@@ -1,4 +1,6 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
+
 include __DIR__ . '/db.php';
 
 // Get and sanitize input
@@ -65,8 +67,11 @@ if ($stmt->execute()) {
     // Send email notification
     $to      = "tedayouthteso@gmail.com";
     $subject = "New TEDA Application";
-    $body    = "Name: " . htmlspecialchars($name) . "\nEmail: " . htmlspecialchars($email) . "\nPhone: " . htmlspecialchars($phone) . "\nMessage: " . htmlspecialchars($message);
-    @mail($to, $subject, $body);
+    $body = "Name: {$name}\nEmail: {$email}\nPhone: {$phone}\nMessage: {$message}";
+    $sent = mail($to, $subject, $body);
+    if (!$sent) {
+        error_log('mail() failed for application submission from: ' . $email);
+    }
 
     // Return success response with WhatsApp link
     $whatsappText = urlencode("New Application:\nName: " . $name . "\nPhone: " . $phone);

@@ -1,3 +1,25 @@
+<?php
+/* ── Authentication guard — MUST be first ─────────────── */
+session_start();
+
+require_once __DIR__ . '/../backend/config.php';
+
+/* Redirect to login if not authenticated */
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header('Location: login.php');
+    exit;
+}
+
+/* Session timeout — log out after inactivity */
+if (isset($_SESSION['admin_last_seen']) &&
+    (time() - $_SESSION['admin_last_seen']) > SESSION_TIMEOUT) {
+    session_destroy();
+    header('Location: login.php?logged_out=1');
+    exit;
+}
+$_SESSION['admin_last_seen'] = time();
+/* ──────────────────────────────────────────────────────── */
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +48,7 @@ $contactCount = $conn->query("SELECT COUNT(*) AS c FROM contact_messages")->fetc
     <a href="../index.php">&#8592; Back to Site</a>
     <a href="#membership" class="active">Membership</a>
     <a href="#contact">Contact</a>
+    <a href="logout.php" style="margin-left:auto;color:rgba(255,255,255,0.45)">Sign out</a>
 </nav>
 
 <div class="section">

@@ -188,7 +188,7 @@
     // Prevents spawning one requestAnimationFrame per section.
     function masterTick() {
         clock += 0.012;                        // advance shared oscillation clock
-        if (clock > 6283) clock -= 6283;       // wrap at 2π × 1000 (float safety)
+        clock %= 6283;                         // wrap at 2π × 1000 (float safety)
 
         for (var i = 0; i < tickFns.length; i++) tickFns[i]();
 

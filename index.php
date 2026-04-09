@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf = htmlspecialchars($_SESSION['csrf_token']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,6 +182,7 @@
                 <p class="lead">Join a growing community of youth creating real impact.</p>
 
                 <form action="backend/submit_membership.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
                     <div class="form-row">
                         <input type="text" name="fullname" placeholder="Full Name" required>
                         <input type="email" name="email" placeholder="Email Address" required>
@@ -223,6 +231,7 @@
             <p class="lead">Have a question? We'd love to hear from you.</p>
 
             <form action="backend/submit_contact.php" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
                 <div class="form-row">
                     <input type="text" name="name" placeholder="Your Name" required>
                     <input type="email" name="email" placeholder="Your Email" required>

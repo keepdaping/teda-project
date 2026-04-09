@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cp \"/tmp/style_clean.css\" \"c:/Users/MAI-WAY/Desktop/teda/public/css/style.css\")"
+      "Bash(cp \"/tmp/style_clean.css\" \"c:/Users/MAI-WAY/Desktop/teda/public/css/style.css\")",
+      "Bash(dir \"c:\\\\Users\\\\MAI-WAY\\\\Desktop\\\\teda\" /s /b)"
     ]
   }
 }

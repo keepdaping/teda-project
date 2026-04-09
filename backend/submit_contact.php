@@ -1,13 +1,34 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
+
+session_start();
+
+/* ── CSRF check ──────────────────────────────────────────── */
+if (!hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'] ?? '')) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Invalid request.']);
+    exit;
+}
+
+/* ── Rate limiting (5 submissions per minute per session) ── */
+$rkey = 'rate_contact_' . md5($_SERVER['REMOTE_ADDR'] ?? '');
+if (!isset($_SESSION[$rkey])) $_SESSION[$rkey] = ['count' => 0, 'ts' => time()];
+if (time() - $_SESSION[$rkey]['ts'] > 60) $_SESSION[$rkey] = ['count' => 0, 'ts' => time()];
+if (++$_SESSION[$rkey]['count'] > 5) {
+    http_response_code(429);
+    echo json_encode(['success' => false, 'message' => 'Too many requests. Please wait a minute.']);
+    exit;
+}
+
 include __DIR__ . '/db.php';
 
 // Get and sanitize input
-$name    = isset($_POST['name']) ? trim($_POST['name']) : '';
-$email   = isset($_POST['email']) ? trim($_POST['email']) : '';
+$name    = isset($_POST['name'])    ? trim($_POST['name'])    : '';
+$email   = isset($_POST['email'])   ? trim($_POST['email'])   : '';
 $message = isset($_POST['message']) ? trim($_POST['message']) : '';
 
 // Validation
-$errors = array();
+$errors = [];
 
 if (empty($name)) {
     $errors[] = 'Name is required';
@@ -27,45 +48,29 @@ if (empty($message)) {
     $errors[] = 'Message must be less than 1000 characters';
 }
 
-// If validation fails, return error
 if (!empty($errors)) {
-    echo json_encode([
-        'success' => false,
-        'message' => implode(', ', $errors)
-    ]);
     http_response_code(400);
+    echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
     exit;
 }
 
-// Prepare statement (SECURE - prevents SQL injection)
 $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)");
 
 if (!$stmt) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Database error. Please try again.'
-    ]);
+    error_log('contact_messages prepare failed: ' . $conn->error);
     http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database error. Please try again.']);
     exit;
 }
 
-// Bind parameters
 $stmt->bind_param("sss", $name, $email, $message);
 
-// Execute query
 if ($stmt->execute()) {
-    echo json_encode([
-        'success' => true,
-        'message' => 'Message sent successfully! We\'ll get back to you soon.'
-    ]);
+    echo json_encode(['success' => true, 'message' => "Message sent successfully! We'll get back to you soon."]);
 } else {
-    // Log error but don't expose to user
-    error_log("Contact message insert error: " . $stmt->error);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Error sending message. Please try again.'
-    ]);
+    error_log('Contact message insert error: ' . $stmt->error);
     http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Error sending message. Please try again.']);
 }
 
 $stmt->close();
