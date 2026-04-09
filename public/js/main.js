@@ -128,25 +128,29 @@ function showFeedback(form, message, type) {
 }
 
 /* ── Scroll reveal with IntersectionObserver ──────────── */
-var sectionIdx = 0;
-document.querySelectorAll(".section:not(.hero)").forEach(function (sec) {
-    sec.classList.add("reveal", sectionIdx % 2 === 0 ? "from-left" : "from-right");
-    sectionIdx++;
-});
-
-document.querySelectorAll(".card, .info-block, .donate-panel").forEach(function (el, i) {
+/*
+   Only cards and panels stagger in — NOT sections themselves.
+   Section-level slide-in breaks parallax transforms.
+   Stagger cycles in groups of 5 (max 0.32s) so long grids
+   don't keep visitors waiting.
+   Delay is cleared after animation so hover transitions are instant.
+*/
+document.querySelectorAll(".card, .info-block, .donate-panel, .resource-list").forEach(function (el, i) {
     el.classList.add("reveal", "from-bottom");
-    el.style.transitionDelay = (i * 0.05) + "s";
+    el.style.transitionDelay = ((i % 5) * 0.08) + "s";
 });
 
 var revealObs = new IntersectionObserver(function (entries, obs) {
     entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            obs.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("visible");
+        obs.unobserve(entry.target);
+        /* Remove stagger delay so subsequent hover transitions fire instantly */
+        setTimeout(function () {
+            entry.target.style.transitionDelay = "";
+        }, 700);
     });
-}, { threshold: 0.10 });
+}, { threshold: 0.08 });
 
 document.querySelectorAll(".reveal").forEach(function (el) { revealObs.observe(el); });
 

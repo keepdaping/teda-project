@@ -42,7 +42,7 @@
 </section>
 
 <!-- ABOUT + FOCUS -->
-<section id="about" class="section section--parallax">
+<section id="about" class="section section--parallax dark-section">
     <div class="section-bg"></div>
     <div class="container">
 
@@ -153,7 +153,7 @@
 </section>
 
 <!-- RESOURCES + JOIN -->
-<section id="resources" class="section section--parallax section--tinted">
+<section id="resources" class="section section--parallax dark-section">
     <div class="section-bg"></div>
     <div class="container">
 
@@ -190,7 +190,8 @@
 </section>
 
 <!-- GALLERY -->
-<section id="gallery" class="section">
+<section id="gallery" class="section section--parallax dark-section">
+    <div class="section-bg"></div>
     <div class="container">
         <span class="label">In the field</span>
         <h2>Our Activities</h2>
@@ -212,7 +213,7 @@
 </section>
 
 <!-- CONTACT + DONATE -->
-<section id="contact" class="section section--parallax section--tinted">
+<section id="contact" class="section section--parallax dark-section">
     <div class="section-bg"></div>
     <div class="container">
 

@@ -276,30 +276,169 @@ nav a.active            { color: #fff; }
 .section-bg {
     position: absolute;
     inset: 0;
-    background: url('../images/hero.jpg') center / cover no-repeat;
+    /* Same layered background as hero: image over brown brand gradient */
+    background:
+        url('../images/hero.jpg') center / cover no-repeat,
+        linear-gradient(135deg, var(--p) 0%, #2d0c06 100%);
     transform: scale(1.15);   /* oversize — JS drives this */
     z-index: 0;
     will-change: transform;
     transition: none;         /* JS-only, no CSS transition */
 }
 
-/* Semi-opaque overlay so existing light-theme text stays readable */
+/* Default overlay — light, for any non-dark parallax section */
 .section-bg::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(247, 246, 244, 0.91);   /* matches --bg */
+    background: rgba(247, 246, 244, 0.91);
 }
 
-/* Tinted variant overlay — matches --tinted */
-.section--tinted .section-bg::after {
-    background: rgba(240, 235, 229, 0.91);
+/* Dark sections: same 50% black tint as the hero — reveals the
+   brown gradient + image beneath, matching hero exactly */
+.dark-section .section-bg::after {
+    background: rgba(0, 0, 0, 0.50);
 }
 
 /* Content always above the bg + overlay stack */
 .section--parallax .container {
     position: relative;
     z-index: 2;
+}
+
+/* ============================================================
+   DARK SECTIONS
+   Overrides the light overlay + all component backgrounds so
+   About / Resources / Contact feel like one continuous dark
+   environment matching the hero.
+   ============================================================ */
+
+/* ── Base text ──────────────────────────────────────────── */
+.dark-section,
+.dark-section p                { color: rgba(255,255,255,0.68); }
+.dark-section h2               { color: #ffffff; }
+.dark-section h3               { color: rgba(255,255,255,0.92); }
+.dark-section .lead            { color: rgba(255,255,255,0.65); }
+.dark-section .label           { color: rgba(255,255,255,0.38); letter-spacing: 0.18em; }
+.dark-section .sub-heading     { color: rgba(255,255,255,0.88); }
+.dark-section .eyebrow         { color: rgba(255,255,255,0.38); }
+
+/* ── Info blocks (Vision / Mission) ────────────────────── */
+.dark-section .info-block {
+    background: rgba(255,255,255,0.05);
+    box-shadow: none;
+    border: 1px solid rgba(255,255,255,0.09);
+}
+
+.dark-section .info-block h3   { color: rgba(255,255,255,0.38); }
+.dark-section .info-block p    { color: rgba(255,255,255,0.68); }
+
+/* ── Pills ──────────────────────────────────────────────── */
+.dark-section .pill-list li {
+    background: rgba(255,255,255,0.07);
+    color:      rgba(255,255,255,0.72);
+    border: 1px solid rgba(255,255,255,0.11);
+}
+
+/* ── Director cards ─────────────────────────────────────── */
+.dark-section .director-card p { color: rgba(255,255,255,0.42); }
+
+/* ── Focus cards ────────────────────────────────────────── */
+.dark-section .card {
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25), 0 4px 20px rgba(0,0,0,0.22);
+    border: 1px solid rgba(255,255,255,0.09);
+}
+
+.dark-section .card:hover {
+    background: rgba(255,255,255,0.09);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35), 0 12px 36px rgba(0,0,0,0.30);
+}
+
+.dark-section .card > h3,
+.dark-section .card .card-body h3 { color: rgba(255,255,255,0.92); }
+.dark-section .card > p,
+.dark-section .card .card-body p  { color: rgba(255,255,255,0.62); }
+
+/* Imageless card accent — lighter brand tint in dark context */
+.dark-section .card:not(:has(> img)):not(:has(.card-body > img)) {
+    border-top-color: var(--p-light);
+}
+
+/* ── Resource list ──────────────────────────────────────── */
+.dark-section .resource-list {
+    background: rgba(255,255,255,0.05);
+    box-shadow: none;
+    border: 1px solid rgba(255,255,255,0.09);
+}
+
+.dark-section .resource-list li {
+    color: rgba(255,255,255,0.75);
+    border-bottom-color: rgba(255,255,255,0.07);
+}
+
+.dark-section .resource-list li:last-child { border-bottom: none; }
+
+.dark-section .resource-list li:hover {
+    background: rgba(255,255,255,0.06);
+    padding-left: calc(var(--s4) + 6px);
+}
+
+/* ── Forms ──────────────────────────────────────────────── */
+.dark-section .form-wrap form,
+.dark-section .container--narrow form {
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 8px 32px rgba(0,0,0,0.22);
+    border: 1px solid rgba(255,255,255,0.09);
+}
+
+.dark-section form input,
+.dark-section form textarea,
+.dark-section form select {
+    background:   rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.13);
+    color: #fff;
+}
+
+.dark-section form input::placeholder,
+.dark-section form textarea::placeholder { color: rgba(255,255,255,0.30); }
+
+.dark-section form input:focus,
+.dark-section form textarea:focus,
+.dark-section form select:focus {
+    background:   rgba(255,255,255,0.11);
+    border-color: var(--p-light);
+    box-shadow:   0 0 0 3px rgba(122,41,18,0.32);
+}
+
+/* ── Donate panels ──────────────────────────────────────── */
+.dark-section .donate-panel {
+    background: rgba(255,255,255,0.05);
+    box-shadow: none;
+    border: 1px solid rgba(255,255,255,0.09);
+}
+
+.dark-section .donate-panel h3     { color: rgba(255,255,255,0.92); }
+.dark-section .donate-panel > p    { color: rgba(255,255,255,0.65); }
+.dark-section .money-line          { color: rgba(255,255,255,0.72); }
+.dark-section .money-line strong   { color: rgba(255,255,255,0.92); }
+
+/* ── Gallery carousel (dark context) ───────────────────── */
+.dark-section .carousel-btn {
+    background:   rgba(255,255,255,0.10);
+    border-color: rgba(255,255,255,0.18);
+    color: #fff;
+}
+
+.dark-section .carousel-btn:hover {
+    background:   var(--p);
+    border-color: var(--p);
+    box-shadow: 0 4px 12px var(--p-glow);
+}
+
+/* Gallery images — keep their natural look; subtle border for definition */
+.dark-section .gallery-carousel img {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.40), 0 8px 24px rgba(0,0,0,0.30);
 }
 
 /* ── Typography hierarchy ── */
@@ -1271,260 +1410,167 @@ table tbody tr:hover td      { background: #faf7f4; }
 
 
 /* ============================================================
-   FINAL POLISH — ELITE UI REFINEMENT (NON-DESTRUCTIVE)
+   PREMIUM ENHANCEMENTS
+   Properly scoped. No !important conflicts.
    ============================================================ */
 
-/* ===== GLOBAL SMOOTHNESS ===== */
-body {
-    letter-spacing: -0.01em;
-}
-
-/* ===== NAV — PREMIUM ===== */
+/* ── Nav — frosted glass ────────────────────────────────── */
 nav {
-    backdrop-filter: blur(12px);
-    background: rgba(26, 26, 26, 0.78);
+    background: rgba(22, 22, 22, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.28);
 }
 
-nav a {
-    font-weight: 500;
-    letter-spacing: 0.02em;
-}
-
-/* ===== HERO — DEPTH ===== */
-.hero::after {
-    content: "";
+/* ── Hero — radial light accents for depth ──────────────── */
+.hero::before {
+    content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.06), transparent 60%);
+    background:
+        radial-gradient(ellipse at 28% 38%, rgba(255,255,255,0.07) 0%, transparent 52%),
+        radial-gradient(ellipse at 72% 72%, rgba(255,255,255,0.04) 0%, transparent 48%);
+    z-index: 0;
     pointer-events: none;
 }
 
-/* ===== SECTION FLOW ===== */
-.section + .section {
-    border-top: 1px solid rgba(0,0,0,0.035);
+/* ── Section transitions — gradient fades at edges ─────── */
+/* Creates smooth dark blending between consecutive sections  */
+.section--parallax::before,
+.section--parallax::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 110px;
+    z-index: 1;           /* above section-bg, below container */
+    pointer-events: none;
 }
 
-/* ===== CARDS — HIGH-END FEEL ===== */
-.card {
-    transition:
-        transform 0.3s var(--ease),
-        box-shadow 0.3s var(--ease);
+.section--parallax::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.38), transparent);
 }
 
-.card:hover {
-    transform: translateY(-4px);
+.section--parallax::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.38), transparent);
 }
 
-/* ===== TYPOGRAPHY — TIGHTER ===== */
-h2 {
-    letter-spacing: -0.045em;
+/* ── Glassmorphism on dark section components ───────────── */
+/* Backdrop blur shows the parallax background through panels */
+.dark-section .card,
+.dark-section .info-block,
+.dark-section .donate-panel,
+.dark-section .resource-list,
+.dark-section .form-wrap form,
+.dark-section .container--narrow form {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-.lead {
-    font-size: 18px;
-    opacity: 0.92;
+/* ── CTA pulse — hero buttons only ─────────────────────── */
+@keyframes cta-glow {
+    0%, 100% { box-shadow: 0 4px 16px rgba(92,31,13,0.28); }
+    50%       { box-shadow: 0 4px 32px rgba(92,31,13,0.55), 0 0 0 1px rgba(122,41,18,0.18); }
 }
 
-/* ===== BUTTONS — REFINED ===== */
-.btn {
-    border-radius: 9px;
+.hero .btn-primary {
+    animation: cta-glow 3.2s ease-in-out infinite;
+    padding: 14px 34px;
+    font-size: 15px;
 }
 
+.hero .btn-primary:hover {
+    animation: none;
+    box-shadow: 0 6px 28px rgba(92,31,13,0.55);
+}
+
+/* ── Buttons — depth and gradient ──────────────────────── */
 .btn-primary {
-    background: linear-gradient(135deg, var(--p) 0%, var(--p-light) 100%);
-    border: none;
+    background: linear-gradient(135deg, var(--p), var(--p-light));
+    box-shadow: 0 3px 12px rgba(92,31,13,0.22);
 }
 
 .btn-primary:hover {
     background: linear-gradient(135deg, var(--p-dark), var(--p));
+    box-shadow: 0 6px 22px rgba(92,31,13,0.40);
 }
 
-/* ===== FORMS — FEEL BETTER ===== */
-form input,
-form textarea {
-    border-radius: 9px;
+/* Form submit buttons — slightly larger for better CTA feel */
+.btn-primary.btn-full {
+    padding: 14px 26px;
+    font-size: 15px;
 }
 
-form input:focus,
-form textarea:focus {
-    transform: scale(1.01);
-}
+/* ── Section spacing ────────────────────────────────────── */
+.section     { padding: 120px 0; }
+.block-sep   { margin-top: 96px; }
 
-/* ===== GALLERY — PREMIUM ===== */
-.gallery-carousel img {
-    border-radius: 14px;
-}
+/* ── Layout ─────────────────────────────────────────────── */
+.container { max-width: 1000px; }
 
-/* ===== FOOTER — DEPTH ===== */
-footer {
-    background: linear-gradient(180deg, #0d0d0d 0%, #050505 100%);
-}
-
-/* ============================================================
-   REAL FIX — CLEAN PROFESSIONAL UI
-   ============================================================ */
-
-/* ===== REMOVE HEAVINESS ===== */
-.card,
-.info-block,
-.resource-list,
-.donate-panel,
-.table-wrap {
-    box-shadow: none !important;
-    border: 1px solid var(--border);
-}
-
-/* ===== ADD AIR (THIS IS THE BIG ONE) ===== */
-.section {
-    padding: 120px 0 !important;
-}
-
-/* spacing inside merged sections */
-.block-sep {
-    margin-top: 100px !important;
-}
-
-/* ===== TYPOGRAPHY BREATHING ===== */
+/* ── Typography ─────────────────────────────────────────── */
 h2 {
-    margin-bottom: 32px;
+    letter-spacing: -0.045em;
+    margin-bottom: 28px;
 }
 
 .lead {
-    margin-bottom: 48px;
-    max-width: 600px;
+    font-size: 18px;
+    margin-bottom: 44px;
+    max-width: 580px;
 }
 
-/* ===== MAKE CONTENT NARROWER (VERY IMPORTANT) ===== */
-.container {
-    max-width: 1000px;
+/* Subtle luminous quality on dark section headings */
+.dark-section h2 {
+    text-shadow: 0 0 48px rgba(255,255,255,0.10);
 }
 
-/* ===== HERO FIX (LESS HEAVY) ===== */
-.hero {
-    min-height: 75vh;
+/* ── Cards — clean hover for light sections ─────────────── */
+/* Dark section cards handled in DARK SECTIONS block above   */
+.section:not(.dark-section) .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sh-up);
 }
 
-/* ===== NAV CLEANER ===== */
-nav {
-    background: var(--p-dark) !important;
-    border-bottom: none;
-}
+/* ── Gallery images ─────────────────────────────────────── */
+.gallery-carousel img { border-radius: 14px; }
 
-/* ===== CARDS SIMPLIFIED ===== */
-.card {
-    transform: none !important;
-}
-
-.card:hover {
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* ===== REMOVE OVER-STYLING ===== */
-.btn-primary {
-    box-shadow: none !important;
-}
-
-/* ===== SECTION FLOW (CRITICAL) ===== */
-.section + .section {
-    border-top: none;
-}
-
-/* ===== FORM CLEAN ===== */
+/* ── Forms ──────────────────────────────────────────────── */
 form input,
-form textarea {
-    background: white;
-}
+form textarea,
+form select { border-radius: 9px; }
 
-/* ===== GALLERY CLEAN ===== */
-.gallery-carousel img {
-    box-shadow: none !important;
-}
-
-/* ===== FOOTER SIMPLER ===== */
+/* ── Footer ─────────────────────────────────────────────── */
 footer {
-    background: var(--p-dark) !important;
-}
-
-/* ============================================================
-   CONTROLLED DEPTH SYSTEM (REAL 3D FEEL — CLEAN)
-   ============================================================ */
-
-/* ===== BASE DEPTH ===== */
-.card,
-.info-block,
-.resource-list,
-.donate-panel,
-.stat-chip {
-    box-shadow:
-        0 1px 2px rgba(0,0,0,0.04),
-        0 6px 20px rgba(0,0,0,0.06);
-    border: 1px solid rgba(0,0,0,0.04);
-    transition: all 0.3s var(--ease);
-}
-
-/* ===== HOVER DEPTH ===== */
-.card:hover,
-.info-block:hover,
-.donate-panel:hover {
-    transform: translateY(-3px);
-    box-shadow:
-        0 10px 30px rgba(0,0,0,0.10),
-        0 4px 12px rgba(0,0,0,0.06);
-}
-
-/* ===== HERO DEPTH ===== */
-.hero {
-    position: relative;
-}
-
-.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06), transparent 60%),
-        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.04), transparent 60%);
-    pointer-events: none;
-}
-
-/* ===== NAV DEPTH ===== */
-nav {
-    background: rgba(26, 26, 26, 0.85) !important;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-}
-
-/* ===== BUTTON DEPTH ===== */
-.btn-primary {
-    box-shadow:
-        0 4px 14px rgba(68, 23, 10, 0.25);
-}
-
-.btn-primary:hover {
-    box-shadow:
-        0 6px 20px rgba(68, 23, 10, 0.35);
-}
-
-/* ===== IMAGE DEPTH ===== */
-.gallery-carousel img,
-.card img {
-    box-shadow:
-        0 6px 18px rgba(0,0,0,0.10);
-}
-
-/* ===== SECTION LAYERING ===== */
-.section--tinted {
-    box-shadow: inset 0 1px 0 rgba(0,0,0,0.04);
-}
-
-/* ===== TYPOGRAPHY DEPTH ===== */
-h2 {
-    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
-}
-
-/* ===== FOOTER DEPTH ===== */
-footer {
-    background: linear-gradient(180deg, #0d0d0d, #050505);
+    background: linear-gradient(180deg, #0d0d0d, #060606);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
 }
+
+/* ── Mobile — disable heavy blur for performance ────────── */
+@media (max-width: 768px) {
+    .dark-section .card,
+    .dark-section .info-block,
+    .dark-section .donate-panel,
+    .dark-section .resource-list,
+    .dark-section .form-wrap form,
+    .dark-section .container--narrow form {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .section     { padding: 80px 0; }
+    .block-sep   { margin-top: 64px; }
+
+    .hero .btn-primary { padding: 12px 26px; font-size: 14px; }
+
+    .section--parallax::before,
+    .section--parallax::after { height: 70px; }
+}
+
+@media (max-width: 520px) {
+    .hero-buttons { flex-direction: column; align-items: stretch; }
+    .hero .btn-primary,
+    .hero .btn-ghost { width: 100%; justify-content: center; }
+}
+
