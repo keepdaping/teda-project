@@ -10,7 +10,7 @@ $csrf = htmlspecialchars($_SESSION['csrf_token']);
 <head>
     <meta charset="UTF-8">
     <title>TEDA - Teso Elites Development Association</title>
-    <link rel="stylesheet" href="/teda/public/css/style.css?v=103">
+    <link rel="stylesheet" href="public/css/style.css">
 </head>
 
 <body>
@@ -29,10 +29,7 @@ $csrf = htmlspecialchars($_SESSION['csrf_token']);
     <a href="#contact">Contact</a>
 </nav>
 
-<!-- HERO (UPDATED WITH SONIC EFFECT) -->
 <section class="hero">
-
-    <!-- BACKGROUND LAYER (NEW) -->
     <div class="hero-bg"></div>
 
     <div class="hero-content">
@@ -101,7 +98,6 @@ $csrf = htmlspecialchars($_SESSION['csrf_token']);
 
             <div class="cards-grid">
 
-                <!-- FIXED CARD STRUCTURE -->
                 <div class="card">
                     <img src="public/images/img6.jpg" alt="Education">
                     <div class="card-body">
@@ -265,6 +261,12 @@ $csrf = htmlspecialchars($_SESSION['csrf_token']);
 <footer>
     <p>&copy; 2026 TEDA. All rights reserved.</p>
 </footer>
+
+<!-- Image lightbox modal -->
+<div id="modal" class="modal">
+    <button class="modal-close" aria-label="Close">&times;</button>
+    <img id="modal-img" src="" alt="Gallery image">
+</div>
 
 <script src="public/js/main.js"></script>
 <script src="public/js/effects.js"></script>

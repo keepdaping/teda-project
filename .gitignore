@@ -1,0 +1,35 @@
+# ── OS generated ──────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ── IDE / editor ──────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-workspace
+*.suo
+*.user
+
+# ── PHP / server ──────────────────────────────────────────
+*.log
+*.cache
+/vendor/
+
+# ── Node (in case npm is ever added) ─────────────────────
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# ── Environment & secrets ─────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── One-time setup tool — delete after use ────────────────
+# admin/setup_password.php
+
+# ── Claude Code session data ──────────────────────────────
+.claude/
